@@ -239,6 +239,7 @@ public class View extends JFrame implements ActionListener {
         } else if (e.getSource() == save) {
             Controller.editCard(topic.getText(), inTextCitation.getText(), citation.getText(), data.getText());
             Controller.updateView();
+            Controller.showState();
         } else if (e.getSource() == clearSort) {
             System.out.println("clear sort clicked");
         } else if (e.getSource() == delete) {

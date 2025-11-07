@@ -44,5 +44,9 @@ public class Controller {
     public static void updateView(){
         
     }
+
+    public static void showState(){
+        System.out.println(mainDeck);
+    }
     
 }
