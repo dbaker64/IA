@@ -1,7 +1,12 @@
 package IA;
 
-import com.google.gson.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Controller {
     
@@ -40,6 +45,8 @@ public class Controller {
         allDecks.get(currentDeckIndex).getByID(currentCardID).setCitation(citation);
         allDecks.get(currentDeckIndex).getByID(currentCardID).setData(data);
     }
+
+
     
     public static void updateView(){
         
@@ -47,6 +54,34 @@ public class Controller {
 
     public static void showState(){
         System.out.println(mainDeck);
+    }
+
+    public static void upload(File file) throws IOException{
+        String s = JsonManager.fileToString(file);
+        Deck d = JsonManager.jsonToDeck(s);
+        allDecks.add(d);
+        currentDeckIndex = allDecks.size() -1;
+    }
+
+    public static void download(){
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File("."));
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Json Files (*.json)", "json");
+        fileChooser.setFileFilter(filter);
+        int response = fileChooser.showSaveDialog(null);
+        if (response == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            String filePath = selectedFile.getAbsolutePath();
+                if (!filePath.toLowerCase().endsWith(".json")) {
+                    selectedFile = new File(filePath + ".json");
+                }
+                try (FileWriter fw = new FileWriter(selectedFile)) {
+                    fw.write(JsonManager.deckToJson(allDecks.get(currentDeckIndex)));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    System.err.println("Error saving file: " + ex.getMessage());
+                }
+        }
     }
     
 }
