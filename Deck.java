@@ -7,11 +7,19 @@ public class Deck{
     
     public Deck(){
         cards = new ArrayList<>();
-        cards.add(new Card());
     }
     
     public Deck(Deck d){
         cards = d.getCards();
+    }
+
+    public Deck(ArrayList<Card> c){
+        cards = c;
+    }
+
+    public Deck(Card c){
+        cards = new ArrayList<>();
+        cards.add(c);
     }
 
     public ArrayList<Card> getCards(){

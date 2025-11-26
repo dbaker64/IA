@@ -20,6 +20,11 @@ public class JsonManager {
         return d;
     }
 
+    public static Deck jsonToDeck(File file) throws IOException{
+        String fileContent = Files.readString(Paths.get(file.getPath()));
+        return JsonManager.jsonToDeck(fileContent);
+    }
+
     public static String fileToString(File file) throws IOException{
         String fileContent = Files.readString(Paths.get(file.getPath())); //Google AI on how to get String from a file efficiently
         return fileContent;

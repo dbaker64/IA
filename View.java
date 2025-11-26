@@ -20,6 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JTextArea;
 import javax.swing.BorderFactory;
 
@@ -186,8 +187,12 @@ public class View extends JFrame implements ActionListener {
         this.setVisible(true);
     }
 
+    public View(int i){
+        
+    }
+
     // Helper: Create uniform styled button
-    private JButton createButton(String text, boolean bordered) {
+    public JButton createButton(String text, boolean bordered) {
         JButton b = new JButton(text);
         b.setFont(buttonFont);
         b.setBackground(lightBlue);
@@ -216,7 +221,7 @@ public class View extends JFrame implements ActionListener {
     }
 
     // Helper: Create styled text field
-    private JTextField createField(String placeholder, int alignment) {
+    public JTextField createField(String placeholder, int alignment) {
         JTextField f = new JTextField(placeholder);
         f.setHorizontalAlignment(alignment);
         f.setFont(fieldFont);
@@ -230,7 +235,15 @@ public class View extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == download) {
-            Controller.download();
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(new File("."));
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Json Files (*.json)", "json");
+            fileChooser.setFileFilter(filter);
+            int response = fileChooser.showSaveDialog(null);
+            if (response == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                Controller.download(selectedFile);
+            }
         } else if (e.getSource() == upload) {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setCurrentDirectory(new File("."));
@@ -240,12 +253,11 @@ public class View extends JFrame implements ActionListener {
                 try {
                     Controller.upload(file);
                 } catch (IOException e1) {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
             }
         } else if (e.getSource() == sort) {
-            System.out.println("sort clicked");
+            new SortView();
         } else if (e.getSource() == previous) {
             System.out.println("previous clicked");
         } else if (e.getSource() == next) {

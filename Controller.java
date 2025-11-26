@@ -5,9 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 public class Controller {
     
     private static Deck mainDeck = new Deck();
@@ -45,15 +42,18 @@ public class Controller {
         allDecks.get(currentDeckIndex).getByID(currentCardID).setCitation(citation);
         allDecks.get(currentDeckIndex).getByID(currentCardID).setData(data);
     }
-
-
     
     public static void updateView(){
         
     }
 
     public static void showState(){
-        System.out.println(mainDeck);
+        System.out.println("All Decks");
+        int i = 0;
+        for(Deck d : allDecks){
+            System.out.println("Index: "+i);
+            System.out.println(d);
+        }
     }
 
     public static void upload(File file) throws IOException{
@@ -63,25 +63,35 @@ public class Controller {
         currentDeckIndex = allDecks.size() -1;
     }
 
-    public static void download(){
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File("."));
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Json Files (*.json)", "json");
-        fileChooser.setFileFilter(filter);
-        int response = fileChooser.showSaveDialog(null);
-        if (response == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = fileChooser.getSelectedFile();
-            String filePath = selectedFile.getAbsolutePath();
+    public static void download(File f){
+        String filePath = f.getAbsolutePath();
                 if (!filePath.toLowerCase().endsWith(".json")) {
-                    selectedFile = new File(filePath + ".json");
+                    f = new File(filePath + ".json");
                 }
-                try (FileWriter fw = new FileWriter(selectedFile)) {
+                try (FileWriter fw = new FileWriter(f)) {
                     fw.write(JsonManager.deckToJson(allDecks.get(currentDeckIndex)));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                     System.err.println("Error saving file: " + ex.getMessage());
                 }
-        }
+    }
+
+    public static void sortByData(String parameter){
+        Deck d = Sort.byData(allDecks.get(0),parameter);
+        allDecks.add(d);
+        currentDeckIndex = allDecks.size() -1;
+    }
+
+    public static void sortByInTextCitation(String parameter){
+        Deck d = Sort.byInTextCitation(allDecks.get(0), parameter);
+        allDecks.add(d);
+        currentDeckIndex = allDecks.size() -1;
+    }
+
+    public static void sortByTopic(String parameter){
+        Deck d = Sort.byTopic(allDecks.get(0), parameter);
+        allDecks.add(d);
+        currentDeckIndex = allDecks.size() -1;
     }
     
 }
